@@ -1,13 +1,18 @@
-import './App.css';
-import Navbar from './components/Navbar';
-
+import "./App.css";
+import Experiences from "./components/Experiences";
+import Services from "./components/Services";
+import Hero from "./components/Hero";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
-    <Navbar />
+      <Navbar />
+      <Hero />
+      <Services />
+      <Experiences />
     </>
-  )
+  );
 }
 
 export default App;
