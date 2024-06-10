@@ -4,6 +4,8 @@ import Services from "./components/Services";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import Projects from "./components/Projects";
+import Footer from "./components/Footer";
+import Collab from "./components/Collab";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
       <Services />
       <Experiences />
       <Projects />
+      <Collab />
+      <Footer />
     </>
   );
 }
