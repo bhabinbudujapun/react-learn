@@ -7,8 +7,8 @@ function TodoItem({ todo }) {
   }
   return (
     <div>
-      <input type="checkbox" checked={todo.completed} id={todo.id} />
-      <p>{todo.title}</p>
+      <input type="checkbox" defaultChecked={todo.completed} id={todo.id} />
+      <span>{todo.title}</span>
     </div>
   );
 }
