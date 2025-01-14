@@ -2,7 +2,6 @@ import React from "react";
 import TodoItem from "./TodoItem";
 
 function TodoList() {
-  
   //Demo Values
   const [todos, setTodos] = React.useState([
     { id: 1, title: "todo 1", completed: false },
@@ -28,7 +27,9 @@ function TodoList() {
   function toggleCompleted(id) {
     setTodos(
       todos.map((todo) => {
+        console.log(todo.id, id);
         if (todo.id === id) {
+          console.log(todo.id, id);
           return { ...todo, completed: !todo.completed };
         } else {
           return todo;
