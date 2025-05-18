@@ -1,14 +1,21 @@
 import React from "react";
 
-function TodoItem({ todo }) {
-  if (!todo) {
-    console.log("No todo item found");
-    return null;
+function TodoItem({ todo, deleteTodo, toggleCompleted }) {
+  function handleChange() {
+    toggleCompleted(todo.id);
+    console.log(todo);
   }
+
   return (
     <div>
-      <input type="checkbox" defaultChecked={todo.completed} id={todo.id} />
-      <span>{todo.title}</span>
+      <input
+        type="checkbox"
+        defaultChecked={todo.completed}
+        onChange={handleChange}
+        id={todo.id}
+      />
+      <label htmlFor={todo.id}>{todo.title}</label>
+      <button onClick={() => deleteTodo(todo.id)}>delete</button>
     </div>
   );
 }
