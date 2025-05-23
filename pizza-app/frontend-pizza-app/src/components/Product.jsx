@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 
 const Product = (props) => {
-  console.log(props);
   const { product } = props;
-  console.log(product);
 
   return (
-    <Link to={`/products/${product._id}`}>
+    <Link to={`/products/${product.$_id}`}>
       <div>
-        <img src="../public/images/peproni.png" alt="pizza" />
+        <img src={`${product.image}`} alt="pizza" />
         <div className="text-center">
           <h2 className="text-lg font-bold py-2">{product.name}</h2>
           <span className="bg-gray-200 py-1 rounded-full text-sm px-4">

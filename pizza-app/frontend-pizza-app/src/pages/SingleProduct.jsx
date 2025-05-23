@@ -1,39 +1,37 @@
-import { useEffect, useState } from "react";
-import Product from "../components/Product.jsx";
-
-const productList = async () => {
-  const url = "http://localhost:8000/api/products";
-  const options = { method: "GET", headers: { accept: "application/json" } };
-
-  try {
-    const response = await fetch(url, options);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-};
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import Product from "../components/Product";
 
 const SingleProduct = () => {
-  const [products, setProducts] = useState({});
+  const [product, setProduct] = useState(null);
+  const { _id } = useParams();
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const data = await productList();
-      console.log(data);
-      setProducts(data);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/product/${_id}`
+        );
+        const data = await response.json();
+        console.log("Fetched Data:", data);
+        setProduct(data); // Store the fetched product object
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
     };
-    fetchProduct;
-  }, []);
+
+    fetchData();
+  }, [_id]);
 
   return (
     <div className="container mx-auto pb-24">
-      <h1 className="text-lg font-bold my-8">Products</h1>
-      <div className="grid grid-cols-5 my-8 gap-24">
-        {products.map((product) => (
-          <Product key={product._id} product={product} />
-        ))}
+      <h1 className="text-lg font-bold my-8">Product Details</h1>
+      <div className="grid grid-cols-1 my-8 gap-6">
+        {product ? (
+          <Product product={product} _id={product._id} />
+        ) : (
+          <p>Loading product details...</p>
+        )}
       </div>
     </div>
   );
