@@ -8,6 +8,8 @@ app.use(
   })
 );
 
+app.use(express.json());
+
 app.use("/assets", express.static("public"));
 
 const products = [
@@ -83,6 +85,19 @@ app.get("/api/products", (req, res) => {
 
   res.setHeader("Content-Type", "application/json");
   res.json({ products: updatedProducts });
+});
+
+app.post("/api/products", (req, res) => {
+  console.log("Product Id: ", req.body.ids);
+
+  const filteredProducts = products.filter((product) => {
+    // req.body.ids.includes(product.$_id);
+    console.log(product.$_id);
+  });
+
+  console.log(filteredProducts);
+
+  res.json({ products: filteredProducts });
 });
 
 app.get("/api/product/:_id", (req, res) => {
