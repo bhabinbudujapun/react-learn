@@ -88,16 +88,18 @@ app.get("/api/products", (req, res) => {
 });
 
 app.post("/api/products", (req, res) => {
-  console.log("Product Id: ", req.body.ids);
+  const baseUrl = "http://localhost:8000/assets/images/";
 
   const filteredProducts = products.filter((product) => {
-    // req.body.ids.includes(product.$_id);
-    console.log(product.$_id);
+    return req.body.ids.includes(product.$_id);
   });
 
-  console.log(filteredProducts);
+  const updatedProducts = filteredProducts.map((product) => ({
+    ...product,
+    image: `${baseUrl}${product.image}`,
+  }));
 
-  res.json({ products: filteredProducts });
+  res.json(updatedProducts);
 });
 
 app.get("/api/product/:_id", (req, res) => {
