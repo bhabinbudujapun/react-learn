@@ -10,7 +10,6 @@ const SingleProduct = () => {
     const fetchData = async () => {
       const response = await fetch(`http://localhost:8000/api/product/${_id}`);
       const data = await response.json();
-      console.log("Fetched Data:", data);
       setProduct(data);
     };
 
@@ -36,7 +35,7 @@ const SingleProduct = () => {
           <h1 className="text-xl font-bold">{product.name}</h1>
           <div className="text-md">{product.size}</div>
           <div className="font-bold mt-2">₹ {product.price}</div>
-          <button className="bg-yellow-500 py-1 px-8 rounded-full font-bold mt-4">
+          <button className="bg-yellow-500 py-1 px-8 rounded-full font-bold mt-4 cursor-pointer">
             Add to cart
           </button>
         </div>
