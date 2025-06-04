@@ -1,16 +1,22 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 const app = express();
+
+// Load environment variables
+dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
   })
 );
 
 app.use(express.json());
 
 app.use("/assets", express.static("public"));
+
+const localhost = process.env.LOCAL_HOST;
 
 const products = [
   {
@@ -76,7 +82,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/products", (req, res) => {
-  const baseUrl = "http://localhost:8000/assets/images/";
+  const baseUrl = `${localhost}/assets/images/`;
 
   const updatedProducts = products.map((product) => ({
     ...product,
@@ -88,7 +94,7 @@ app.get("/api/products", (req, res) => {
 });
 
 app.post("/api/products", (req, res) => {
-  const baseUrl = "http://localhost:8000/assets/images/";
+  const baseUrl = `${localhost}/assets/images/`;
 
   const filteredProducts = products.filter((product) => {
     return req.body.ids.includes(product.$_id);
@@ -110,7 +116,7 @@ app.get("/api/product/:_id", (req, res) => {
     return res.status(404).json({ message: "Product not found" });
   }
 
-  const baseUrl = "http://localhost:8000/assets/images/";
+  const baseUrl = `${localhost}/assets/images/`;
 
   const updatedProducts = {
     ...product,

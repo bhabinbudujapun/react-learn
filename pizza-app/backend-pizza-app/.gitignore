@@ -8,3 +8,6 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Secret Files
+.env
