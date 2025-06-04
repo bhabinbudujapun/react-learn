@@ -31,6 +31,7 @@ const Cart = () => {
     const currentQty = cart.items[productId];
     const _cart = { ...cart };
     _cart.items[productId] = currentQty + 1;
+    _cart.totalItems += 1;
     setCart(_cart);
   };
 
@@ -39,6 +40,7 @@ const Cart = () => {
     if (currentQty === 1) return;
     const _cart = { ...cart };
     _cart.items[productId] = currentQty - 1;
+    _cart.totalItems -= 1;
     setCart(_cart);
   };
 
