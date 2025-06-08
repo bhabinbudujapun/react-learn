@@ -9,8 +9,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
-function LoginPage() {
+const LoginPage = () => {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const handleLoginSubmit = () => {
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+    console.log("data: ", { email, password });
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="w-full max-w-sm">
@@ -29,6 +39,7 @@ function LoginPage() {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  ref={emailRef}
                   required
                 />
               </div>
@@ -41,17 +52,24 @@ function LoginPage() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  ref={passwordRef}
+                  required
+                />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
+                <Button onClick={handleLoginSubmit} className="w-full">
                   Login
                 </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link to={"/auth/register"} className="underline underline-offset-4">
+              <Link
+                to={"/auth/register"}
+                className="underline underline-offset-4">
                 Sign up
               </Link>
             </div>
@@ -60,6 +78,6 @@ function LoginPage() {
       </Card>
     </div>
   );
-}
+};
 
 export default LoginPage;
