@@ -8,17 +8,34 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/http/api";
+import { LoaderCircle } from "lucide-react";
 
 const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      navigate("/dashboard/home");
+    },
+  });
+
   const handleLoginSubmit = () => {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
+
     console.log("data: ", { email, password });
+
+    if (!email || !password) {
+      return alert("Please enter email or passowrd!!");
+    }
+    mutation.mutate({ email, password });
   };
 
   return (
@@ -27,7 +44,12 @@ const LoginPage = () => {
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to login to your account <br />
+            {mutation.isPending && (
+              <span className="text-red-500 text-sm">
+                {"Something went wrong"}
+              </span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -60,7 +82,10 @@ const LoginPage = () => {
                 />
               </div>
               <div className="flex flex-col gap-3">
-                <Button onClick={handleLoginSubmit} className="w-full">
+                <Button onClick={handleLoginSubmit} disabled={mutation.isPending}>
+                  {mutation.isPending && (
+                    <LoaderCircle className="animate-spin" />
+                  )}
                   Login
                 </Button>
               </div>
