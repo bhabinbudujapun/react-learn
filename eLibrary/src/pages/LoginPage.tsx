@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
+import axios from "axios";
 
 const LoginPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -21,12 +23,22 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("login in user", data);
       navigate("/dashboard/home");
+    },
+    onError: (error) => {
+      console.log("Login failed", error);
+      if (axios.isAxiosError(error)) {
+        console.error("Server error: ", error.response?.data);
+      } else {
+        console.error("Unknown error: ", error);
+      }
     },
   });
 
-  const handleLoginSubmit = () => {
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
@@ -35,73 +47,58 @@ const LoginPage = () => {
     if (!email || !password) {
       return alert("Please enter email or passowrd!!");
     }
+
     mutation.mutate({ email, password });
   };
-
   return (
-    <div className="flex justify-center items-center h-screen">
+    <section className="flex justify-center items-center h-screen">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account <br />
-            {mutation.isPending && (
+            Enter your email below to login to your account. <br />
+            {mutation.isError && (
               <span className="text-red-500 text-sm">
                 {"Something went wrong"}
               </span>
             )}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  ref={emailRef}
-                  required
-                />
-              </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  ref={passwordRef}
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-3">
-                <Button onClick={handleLoginSubmit} disabled={mutation.isPending}>
-                  {mutation.isPending && (
-                    <LoaderCircle className="animate-spin" />
-                  )}
-                  Login
-                </Button>
-              </div>
-            </div>
+        <CardContent className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              ref={emailRef}
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input ref={passwordRef} id="password" type="password" required />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div className="w-full">
+            <Button
+              onClick={handleLoginSubmit}
+              className="w-full"
+              disabled={mutation.isPending}>
+              {mutation.isPending && <LoaderCircle className="animate-spin" />}
+              <span className="ml-2">Sign in</span>
+            </Button>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link
-                to={"/auth/register"}
-                className="underline underline-offset-4">
+              Don't have an account?{" "}
+              <Link to={"/auth/register"} className="underline">
                 Sign up
               </Link>
             </div>
-          </form>
-        </CardContent>
+          </div>
+        </CardFooter>
       </Card>
-    </div>
+    </section>
   );
 };
 
