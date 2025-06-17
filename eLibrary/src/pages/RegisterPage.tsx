@@ -12,8 +12,11 @@ import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
 import { register } from "@/http/api";
 import { Link, useNavigate } from "react-router-dom";
+import useTokenStore from "@/store";
 
 const RegisterPage = () => {
+  const setToken = useTokenStore((state) => state.setToken);
+
   const navigate = useNavigate();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -22,7 +25,8 @@ const RegisterPage = () => {
 
   const mutation = useMutation({
     mutationFn: register,
-    onSuccess: () => {
+    onSuccess: (response) => {
+      setToken(response.data.accessToken);
       navigate("/auth/register");
     },
   });

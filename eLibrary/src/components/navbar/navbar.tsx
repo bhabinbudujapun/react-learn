@@ -27,11 +27,13 @@ const Navbar = () => {
               className="bg-muted text-foreground hover:bg-accent shadow-none rounded-full md:hidden">
               <Search className="!h-5 !w-5" />
             </Button>
-            <Button
-              variant="outline"
-              className="hidden sm:inline-flex rounded-full">
-              Sign In
-            </Button>
+            <Link to={"/auth/login"}>
+              <Button
+                variant="outline"
+                className="hidden sm:inline-flex rounded-full">
+                Sign In
+              </Button>
+            </Link>
             <Button className="rounded-full">Get Started</Button>
           </div>
         </div>

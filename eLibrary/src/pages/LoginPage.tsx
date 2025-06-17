@@ -14,21 +14,22 @@ import { useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/http/api";
 import { LoaderCircle } from "lucide-react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import useTokenStore from "@/store";
 
 const LoginPage = () => {
+  const setToken = useTokenStore((state) => state.setToken);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
-      console.log("login in user", data);
+    onSuccess: (response) => {
+      setToken(response.data.accessToken);
       navigate("/dashboard/home");
     },
     onError: (error) => {
-      console.log("Login failed", error);
       if (axios.isAxiosError(error)) {
         console.error("Server error: ", error.response?.data);
       } else {
@@ -37,12 +38,17 @@ const LoginPage = () => {
     },
   });
 
+  function extractErrorMessage(error: unknown): string {
+    return (
+      (error as AxiosError<{ message: string }>)?.response?.data?.message ??
+      "Something went wrong!"
+    );
+  }
+
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-
-    console.log("data: ", { email, password });
 
     if (!email || !password) {
       return alert("Please enter email or passowrd!!");
@@ -50,6 +56,7 @@ const LoginPage = () => {
 
     mutation.mutate({ email, password });
   };
+
   return (
     <section className="flex justify-center items-center h-screen">
       <Card className="w-full max-w-sm">
@@ -59,7 +66,7 @@ const LoginPage = () => {
             Enter your email below to login to your account. <br />
             {mutation.isError && (
               <span className="text-red-500 text-sm">
-                {"Something went wrong"}
+                {extractErrorMessage(mutation.error)}
               </span>
             )}
           </CardDescription>

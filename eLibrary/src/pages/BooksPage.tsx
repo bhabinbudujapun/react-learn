@@ -33,28 +33,41 @@ import {
 import { getBooks } from "@/http/api";
 import type { Book } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { MoreHorizontal } from "lucide-react";
+import { CirclePlus, MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const BooksPage = () => {
   const { data } = useQuery({
     queryKey: ["books"],
     queryFn: getBooks,
-    staleTime: 10000, 
+    staleTime: 10000,
   });
 
   return (
-    <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/home">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Books</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <>
+      <div className="flex items-center justify-between">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard/home">Dashboard</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Books</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="flex items-center justify-between ">
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard/books/add">
+              <Button className="cursor-pointer">
+                <CirclePlus />
+                <span>Add Book</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
 
       <Card className="mt-6">
         <CardHeader>
@@ -127,7 +140,7 @@ const BooksPage = () => {
           </Table>
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 };
 

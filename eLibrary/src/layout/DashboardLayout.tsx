@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import useTokenStore from "@/store";
 import {
   Bell,
   CircleUser,
@@ -29,15 +30,27 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, Navigate, NavLink, Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {
+  const { token, setToken } = useTokenStore((state) => state);
+
+  if (token === "") {
+    return <Navigate to={"/auth/login"} replace />;
+  }
+
+  const logout = () => {
+    setToken("");
+  };
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link to="/dashboard" className="flex items-center gap-2 font-semibold">
+            <Link
+              to="/dashboard/home"
+              className="flex items-center gap-2 font-semibold">
               <Package2 className="h-6 w-6" />
               <span className="">eLibrary</span>
             </Link>
@@ -81,7 +94,7 @@ const DashboardLayout = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full">
+                <Button size="sm" disabled={true} className="w-full">
                   Upgrade
                 </Button>
               </CardContent>
@@ -175,7 +188,10 @@ const DashboardLayout = () => {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="rounded-full cursor-pointer">
                 <CircleUser className="h-5 w-5" />
                 <span className="sr-only">Toggle user menu</span>
               </Button>
@@ -183,11 +199,16 @@ const DashboardLayout = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem disabled={true}>Settings</DropdownMenuItem>
+              <DropdownMenuItem disabled={true}>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Button variant={"link"}>Logout</Button>
+                <Button
+                  onClick={logout}
+                  variant={"link"}
+                  className="cursor-pointer">
+                  Logout
+                </Button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
